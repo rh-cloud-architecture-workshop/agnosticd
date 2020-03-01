@@ -5,16 +5,6 @@
     msg: User count end({{ user_count_end }}) <= user count start ({{ user_count_start }})
   when: user_count_end|int <= user_count_start|int
 
-- name: Get oc version
-  command: >
-    oc version -o json
-  register: ocversion
-
-- name: Fail if incorrect oc version
-  fail:
-    msg: Expected oc server version minor to be {{ _ocp_version }}
-  when: (ocversion.stdout | from_json).openshiftVersion != _ocp_version
-
 - name: Ensure tmp directory exists
   file:
     path: "{{ tmp_dir }}"
