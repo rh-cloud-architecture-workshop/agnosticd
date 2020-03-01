@@ -51,7 +51,7 @@
 
 # 'oc rollout status' doesn't work for StatefulSets with OnDelete strategy so use a different approach...
 - name: Get kafka-cluster-kafka StatefulSet info
-  k8s_info:
+  k8s_facts:
     namespace: "{{ _namespace }}"
     name: kafka-cluster-kafka
     kind: StatefulSet
@@ -75,7 +75,7 @@
     current: "{{ kafka_cluster_kafka_info | json_query(current_query) }}"
 
 - name: Get kafka-cluster-zookeeper StatefulSet info
-  k8s_info:
+  k8s_facts:
     namespace: "{{ _namespace }}"
     name: kafka-cluster-zookeeper
     kind: StatefulSet
