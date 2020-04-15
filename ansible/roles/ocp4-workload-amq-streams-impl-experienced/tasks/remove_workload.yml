@@ -6,9 +6,23 @@
   set_fact:
     ocp_project_amq_streams: "amq-streams-{{ guid }}"
     ocp_project_kafka_security: "kafka-security-{{ guid }}"
+    ocp_project_kafka_mirrormaker_source: "kafka-mirrormaker-europe-{{ guid }}"
+    ocp_project_kafka_mirrormaker_target: "kafka-mirrormaker-us-{{ guid }}"
 
-- name: amq streams tasks
+- name: "amq streams tasks in {{ ocp_project_amq_streams }} namespace"
   include_tasks: remove_workload_amq_streams.yml
+  vars:
+    ocp_project_amq_streams_operator: "{{ ocp_project_amq_streams }}"
+
+- name: amq streams tasks in "{{ ocp_project_kafka_mirrormaker_source }}" namespace
+  include_tasks: remove_workload_amq_streams.yml
+  vars:
+    ocp_project_amq_streams_operator: "{{ ocp_project_kafka_mirrormaker_source }}"
+
+- name: "amq streams tasks in {{ ocp_project_kafka_mirrormaker_target }} namespace"
+  include_tasks: remove_workload_amq_streams.yml
+  vars:
+    ocp_project_amq_streams_operator: "{{ ocp_project_kafka_mirrormaker_target }}"
 
 - name: remove user projects
   k8s:
@@ -19,6 +33,8 @@
   loop:
     - "{{ ocp_project_amq_streams }}"
     - "{{ ocp_project_kafka_security }}"
+    - "{{ ocp_project_kafka_mirrormaker_source }}"
+    - "{{ ocp_project_kafka_mirrormaker_target }}"
 
 - name: remove user quota - clusterresourcequota
   k8s:

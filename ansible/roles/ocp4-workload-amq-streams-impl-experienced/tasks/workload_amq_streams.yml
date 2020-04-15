@@ -1,19 +1,19 @@
 ---
 # Implement your Workload deployment tasks here
 
-- name: "create operatorgroup in {{ ocp_project_amq_streams }}"
+- name: "create operatorgroup in {{ ocp_project_amq_streams_operator }}"
   k8s:
     state: present
-    namespace: "{{ ocp_project_amq_streams }}"
+    namespace: "{{ ocp_project_amq_streams_operator }}"
     definition: "{{ lookup('template', role_path ~ '/templates/operatorgroup.j2' ) | from_yaml }}"
   vars:
     operator_group_name: "{{ amq_streams_operator_group_name }}"
-    ocp_project: "{{ ocp_project_amq_streams }}"
+    ocp_project: "{{ ocp_project_amq_streams_operator }}"
 
-- name: "create subscription for amq streams operator in {{ ocp_project_amq_streams }}"
+- name: "create subscription for amq streams operator in {{ ocp_project_amq_streams_operator }}"
   k8s:
     state: present
-    namespace: "{{ ocp_project_amq_streams }}"
+    namespace: "{{ ocp_project_amq_streams_operator }}"
     definition: "{{ lookup('template', role_path ~ '/templates/subscription.j2' ) | from_yaml }}"
   vars:
     subscription_name: "{{ amq_streams_operator_subscription_name }}"
@@ -27,7 +27,7 @@
   k8s_facts:
     api_version: operators.coreos.com/v1alpha1
     kind: InstallPlan
-    namespace: "{{ ocp_project_amq_streams }}"
+    namespace: "{{ ocp_project_amq_streams_operator }}"
   register: r_install_plan
   retries: 30
   delay: 5
@@ -47,7 +47,7 @@
   - name: approve installplan
     k8s:
       state: present
-      namespace: "{{ ocp_project_amq_streams }}"
+      namespace: "{{ ocp_project_amq_streams_operator }}"
       definition: "{{ lookup( 'template', './templates/installplan.j2' ) }}"
     vars:
       install_plan_name: "{{ amq_streams_operator_install_plan_name }}"
@@ -64,8 +64,28 @@
     api_version: operators.coreos.com/v1alpha1
     kind: ClusterServiceVersion
     name: "{{ item }}"
-    namespace: "{{ ocp_project_amq_streams }}"
-  register: r_csv
+    namespace: "{{ ocp_project_amq_streams_operator }}"
+  register: r_csv\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   retries: 180
   delay: 10
   until:
@@ -77,11 +97,11 @@
 - name: create kafka cluster provisioner role
   k8s:
     state: present
-    namespace: "{{ ocp_project_amq_streams }}"
+    namespace: "{{ ocp_project_amq_streams_operator }}"
     definition: "{{ lookup('file', role_path ~ '/files/kafka-cluster-provisioner.yml' ) | from_yaml }}"
 
 - name: "give kafka cluster provisioner privileges to {{ ocp_username }}"
   k8s:
     state: present
-    namespace: "{{ ocp_project_amq_streams }}"
+    namespace: "{{ ocp_project_amq_streams_operator }}"
     definition: "{{ lookup('template', role_path ~ '/templates/kafka-cluster-provisioner-rb.j2' ) | from_yaml }}"
