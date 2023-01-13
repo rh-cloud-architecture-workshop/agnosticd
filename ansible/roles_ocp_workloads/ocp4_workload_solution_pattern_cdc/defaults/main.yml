@@ -1,0 +1,31 @@
+become_override: false
+ocp_username: opentlc-mgr
+silent: false
+
+# ------------------------------------------------
+# Solution Pattern CDC Lab Deployment
+# ------------------------------------------------
+
+# Shared Users
+ocp4_workload_solution_pattern_cdc_user_count: 2
+ocp4_workload_solution_pattern_cdc_user_prefix: user
+
+# Namespace
+ocp4_workload_solution_pattern_cdc_namespace_prefix: cashback-
+
+# ApplicationSet
+ocp4_workload_solution_pattern_cdc_applicationset_name: solution-pattern-cdc
+ocp4_workload_solution_pattern_cdc_applicationset_namespace: openshift-gitops
+
+ocp4_workload_solution_pattern_cdc_application_name: solution-pattern-cdc
+
+ocp4_workload_solution_pattern_cdc_application_repo: https://github.com/btison/rhte2023-solution-pattern-cdc-helm.git
+ocp4_workload_solution_pattern_cdc_application_repo_tag: main
+ocp4_workload_solution_pattern_cdc_application_repo_path: retail
+
+ocp4_workload_solution_pattern_cdc_elasticsearch_enabled: "false"
+ocp4_workload_solution_pattern_cdc_argocd_syncwaves_enabled: "true"
+ocp4_workload_solution_pattern_cdc_debezium_enabled: "false"
+
+ocp4_workload_solution_pattern_cdc_deploy_integration_platform: true
+ocp4_workload_solution_pattern_cdc_cashback_connector_image_tag: rhte2023

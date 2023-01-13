@@ -1,0 +1,15 @@
+{% for __user in _ocp4_workload_solution_pattern_cdc_users %}
+{% for __integration_platform in _ocp4_workload_solution_pattern_cdc_integration_platform %}
+---
+apiVersion: camel.apache.org/v1
+kind: IntegrationPlatform
+metadata:
+  name: '{{ __integration_platform.name }}'
+  namespace: '{{ __integration_platform.namespace | replace("user", __user) }}'
+spec:
+  build: {}
+  kamelet: {}
+  profile: OpenShift
+  resources: {}
+{% endfor %}
+{% endfor %}

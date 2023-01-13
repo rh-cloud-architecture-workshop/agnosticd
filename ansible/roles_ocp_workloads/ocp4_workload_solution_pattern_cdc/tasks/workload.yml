@@ -1,0 +1,46 @@
+---
+
+- name: Create usernames
+  ansible.builtin.set_fact:
+    _ocp4_workload_solution_pattern_cdc_users: |
+       {{ _ocp4_workload_solution_pattern_cdc_users | default([]) + [ocp4_workload_solution_pattern_cdc_user_prefix + item | string] }}
+  loop: "{{ range(1, ((ocp4_workload_solution_pattern_cdc_user_count | int) + 1)) | list }}"
+
+- name: "Create user namespaces"
+  kubernetes.core.k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'namespace.yaml.j2') }}"
+  vars:
+    _ocp4_workload_solution_pattern_cdc_namespaces:
+      - "{{ ocp4_workload_solution_pattern_cdc_namespace_prefix }}user"
+  retries: 10
+  delay: 30
+
+- name: "Give users access to projects"
+  kubernetes.core.k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'rolebinding.yaml.j2') }}"
+  vars:
+    _ocp4_workload_solution_pattern_cdc_bindings:
+      - namespace: "{{ ocp4_workload_solution_pattern_cdc_namespace_prefix }}user"
+        role: "admin"
+  retries: 10
+  delay: 30
+
+- name: "Install Camel-k Installation Platform in user namespace"
+  kubernetes.core.k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'integration-platform.yaml.j2') }}"
+  vars:
+    _ocp4_workload_solution_pattern_cdc_integration_platform:
+      - namespace: "{{ ocp4_workload_solution_pattern_cdc_namespace_prefix }}user"
+        name: camel-k
+  retries: 10
+  delay: 30
+  when:
+    - ocp4_workload_solution_pattern_cdc_deploy_integration_platform | bool
+
+- name: Deploy applicationset
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'applicationset.yaml.j2') | from_yaml }}"
