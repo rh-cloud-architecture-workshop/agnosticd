@@ -45,19 +45,40 @@ spec:
 
             kafka-broker:
               argocd: *argo
+              kafka:
+                cluster:
+                  replicas: {{ ocp4_workload_solution_pattern_cdc_kafka_cluster_replicas }}
+                zookeeper
+                  replicas: {{ ocp4_workload_solution_pattern_cdc_kafka_zookeeper_replicas }}
+                config:
+                  defaultReplicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
+                  offsetsTopicReplicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
+                  transactionStateLogReplicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
+                  transactionStateLogMinIsr: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
 
             kafka-connect:
               argocd: *argo
+              replicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
 
             kafka-topics:
               argocd: *argo
+              kafka:
+                cluster:
+                  replicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
 
             retail-db:
               argocd: *argo
 
             debezium:
               enabled: {{ ocp4_workload_solution_pattern_cdc_debezium_enabled }}
+              topic:
+                replicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
 
             cashback-connector:
               image: 
                 tag: {{ ocp4_workload_solution_pattern_cdc_cashback_connector_image_tag }}
+
+            sales-streams:
+              kafka:
+                streams:
+                  replicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
