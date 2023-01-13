@@ -5,7 +5,7 @@ galaxy_info:
   description: |
     Set up Red Hat Integration - Casmel K Operator
   license: MIT
-  min_ansible_version: 2.11
+  min_ansible_version: "2.11"
   platforms: []
   galaxy_tags:
   - ocp
