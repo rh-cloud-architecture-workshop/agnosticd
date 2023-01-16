@@ -48,7 +48,7 @@ spec:
               kafka:
                 cluster:
                   replicas: {{ ocp4_workload_solution_pattern_cdc_kafka_cluster_replicas }}
-                zookeeper
+                zookeeper:
                   replicas: {{ ocp4_workload_solution_pattern_cdc_kafka_zookeeper_replicas }}
                 config:
                   defaultReplicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
