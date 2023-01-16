@@ -63,8 +63,7 @@ spec:
             kafka-topics:
               argocd: *argo
               kafka:
-                cluster:
-                  replicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
+                replicationFactor: {{ ocp4_workload_solution_pattern_cdc_kafka_topic_replication_factor }}
 
             retail-db:
               argocd: *argo
